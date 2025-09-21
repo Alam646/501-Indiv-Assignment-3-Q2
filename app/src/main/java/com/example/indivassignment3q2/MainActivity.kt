@@ -8,16 +8,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer // Added
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height // Added
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape // Added
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button // Added
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text // Added (or ensured)
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.Text
+import androidx.compose.runtime.* // Added for state management
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip // Added
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,43 +46,47 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ProfileWithBadgeScreen(modifier: Modifier = Modifier) {
+    var showBadge by remember { mutableStateOf(true) } // State for badge visibility
+
     Column(
         modifier = modifier.padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // This Box now acts as a container for the profile picture and the badge.
-        // The size defined here (120.dp) will be for the overall profile area.
         Box(
             modifier = Modifier
                 .size(120.dp)
-            // .background(Color.Gray) // Background removed, children will provide visuals
         ) {
             // Profile Picture
             Box(
                 modifier = Modifier
-                    .fillMaxSize() // Fills the 120.dp container
-                    .clip(CircleShape) // Makes it circular
-                    .background(Color.LightGray), // Background for the profile picture
-                contentAlignment = Alignment.Center // Center the placeholder text
+                    .fillMaxSize()
+                    .clip(CircleShape)
+                    .background(Color.LightGray),
+                contentAlignment = Alignment.Center
             ) {
-                Text("Pic") // Placeholder for an actual image
+                Text("Pic")
             }
 
-            // Notification Badge (Static for now)
-            Box(
-                modifier = Modifier
-                    .size(30.dp) // Size of the badge
-                    .clip(CircleShape) // Makes badge circular
-                    .background(Color.Red) // Badge color
-                    .align(Alignment.BottomEnd) // Aligns this Box to the bottom-end of the parent Box
-                // To add text or a number inside the badge later, you might add:
-                // .padding(4.dp),
-                // contentAlignment = Alignment.Center
-            ) {
-                // Example badge content (can be added in a later step if needed):
-                // Text(text = "1", color = Color.White, fontSize = 10.sp)
+            // Notification Badge (Now conditional)
+            if (showBadge) { // Conditionally display the badge
+                Box(
+                    modifier = Modifier
+                        .size(30.dp)
+                        .clip(CircleShape)
+                        .background(Color.Red)
+                        .align(Alignment.BottomEnd)
+                ) {
+                    // Badge content can be added here if needed
+                }
             }
+        }
+
+        Spacer(modifier = Modifier.height(32.dp)) // Spacer for visual separation
+
+        // Button to toggle badge visibility
+        Button(onClick = { showBadge = !showBadge }) {
+            Text(if (showBadge) "Hide Badge" else "Show Badge")
         }
     }
 }
